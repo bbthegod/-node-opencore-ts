@@ -1,0 +1,22 @@
+import express from 'express';
+import { validate } from 'express-validation';
+import validator from './validation';
+import * as controller from './controller';
+import authentication from '../../middleware/authentication';
+
+const router = express.Router();
+
+router
+  .route('/')
+  .get(authentication(['user', 'admin']), controller.list)
+  .post(authentication(['user', 'admin']), validate(validator.create), controller.create);
+
+router
+  .route('/:Id')
+  .get(authentication(['user', 'admin']), controller.get)
+  .put(authentication(['user', 'admin']), validate(validator.update), controller.update)
+  .delete(authentication(['user', 'admin']), controller.remove);
+
+router.param('Id', controller.load);
+
+export default router;

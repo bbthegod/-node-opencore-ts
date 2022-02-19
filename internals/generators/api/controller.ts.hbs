@@ -1,0 +1,41 @@
+import httpStatus from 'http-status';
+import {{properCase name}} from './model';
+
+export async function load(req, res, next, id) {
+  const {{lowerCase name}} = await {{properCase name}}.findById(id);
+  if (!{{lowerCase name}}) return res.status(httpStatus.NOT_FOUND).end();
+  req.{{lowerCase name}} = {{lowerCase name}};
+  return next();
+}
+
+export function get(req, res) {
+  return res.json(req.{{lowerCase name}});
+}
+
+export function create(req, res) {
+  const { title, content } = req.body;
+  const {{lowerCase name}} = new {{properCase name}}({ title, content });
+  {{lowerCase name}}.save();
+  return res.json({{lowerCase name}});
+}
+
+export function update(req, res) {
+  const { title, content } = req.body;
+  const { {{lowerCase name}} } = req;
+  {{lowerCase name}}.title = title;
+  {{lowerCase name}}.content = content;
+  {{lowerCase name}}.save();
+  return res.json({{lowerCase name}});
+}
+
+export async function list(req, res) {
+  const { limit = 50, skip = 0, filter, sort } = req.query;
+  const {{lowerCase name}}s = await {{properCase name}}.List({ limit, skip, filter, sort });
+  return res.json({{lowerCase name}}s);
+}
+
+export function remove(req, res) {
+  const { {{lowerCase name}} } = req;
+  {{lowerCase name}}.remove();
+  return res.json({{lowerCase name}});
+}

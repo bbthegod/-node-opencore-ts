@@ -1,0 +1,26 @@
+import { Model, Schema, model } from 'mongoose';
+
+interface I{{properCase name}}Document extends {{properCase name}}, Document {}
+interface I{{properCase name}}Model extends Model<I{{properCase name}}Document> {
+  List(filter: { limit: number; skip: number; filter: object; sort: string }): Promise<void>;
+}
+
+const {{properCase name}}Schema: Schema<I{{properCase name}}Document> = new Schema(
+  {
+    title: { type: String },
+    content: { type: String },
+  },
+  { collection: '{{lowerCase name}}s', timestamps: true },
+);
+
+{{properCase name}}Schema.statics.List = async function ({ skip = 0, limit = 500, sort = { createdAt: -1 }, filter = {} }) {
+  const data = await this.find(filter, { createdAt: 0, updatedAt: 0, password: 0 })
+    .sort(sort)
+    .skip(+skip)
+    .limit(+limit)
+    .exec();
+  const count = await this.find(filter).count();
+  return { data, count, limit, skip };
+};
+
+export default model<I{{properCase name}}Document, I{{properCase name}}Model>('{{properCase name}}', {{properCase name}}Schema);
